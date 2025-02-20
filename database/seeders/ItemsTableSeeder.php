@@ -2,20 +2,31 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class ItemsTableSeeder extends Seeder
+class CreateItemsTable extends Migration
 {
-    public function run()
+    public function up()
     {
-        DB::table('items')->insert([
-            ['name' => 'Laptop', 'price' => 599.99, 'category_id' => 1], // Technology
-            ['name' => 'Smartphone', 'price' => 799.99, 'category_id' => 1], // Technology
-            ['name' => 'Yoga Mat', 'price' => 25.00, 'category_id' => 2], // Health
-            ['name' => 'Vitamins', 'price' => 15.00, 'category_id' => 2], // Health
-            ['name' => 'Math Textbook', 'price' => 39.99, 'category_id' => 3], // Education
-            ['name' => 'Notebook', 'price' => 5.00, 'category_id' => 3], // Education
-        ]);
+        Schema::create('items', function (Blueprint $table) {
+            $table->id(); 
+            $table->string('name'); 
+            $table->decimal('price', 10, 2); 
+            $table->unsignedBigInteger('category_id'); 
+            $table->timestamps();
+
+         
+            $table->foreign('category_id')
+                  ->references('id')
+                  ->on('categories')
+                  ->onDelete('CASCADE');
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('items');
     }
 }
